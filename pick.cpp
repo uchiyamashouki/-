@@ -148,10 +148,10 @@ private:
     init_pose();
 
     // 移動する
-    //control_arm(0.3, 0.15, 0.2, 90, 0, 90);
+    // control_arm(0.3, 0.15, 0.2, 90, 0, 90);
 
     // 下ろす
-    control_arm(0., 0, 0.1, 90, 0, 90);
+    control_arm(0.3, 0, 0.1, 90, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
