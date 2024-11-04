@@ -1,4 +1,5 @@
-#手の形を認識する
+#!/usr/bin/python3
+
 import cv2
 import mediapipe as mp
 from PIL import ImageFont, ImageDraw, Image
