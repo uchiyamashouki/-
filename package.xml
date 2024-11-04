@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>itudemo_sazae</name>
+  <version>0.0.1</version>
+  <description>Rock-paper-scissors programs to control CRANE-X7 package</description>
+  <maintainer email="tentoshinz@gmail.com">tentoshinz</maintainer>
+  <license>Apache License 2.0</license>
+  
+  <author email="tentoshinz@gmail.com">tentoshinz</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>angles</depend>
+  <depend>crane_x7_control</depend>
+  <depend>crane_x7_description</depend>
+  <depend>crane_x7_moveit_config</depend>
+  <depend>cv_bridge</depend>
+  <depend>geometry_msgs</depend>
+  <depend>image_geometry</depend>
+  <depend>libopencv-dev</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>rclcpp</depend>
+  <depend>realsense2_camera</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
