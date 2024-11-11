@@ -71,8 +71,10 @@ private:
     if (camera_info_ && depth_image_) {
       // 青、赤、緑のそれぞれの色を検出する処理に分ける // MODIFIED
       process_color(msg, 100, 125, 100, 255, 30, 255, "target_blue"); // 青検出用 // MODIFIED
-      process_color(msg, 0, 10, 100, 255, 30, 255, "target_red"); // 赤検出用 // MODIFIED
-      process_color(msg, 35, 85, 100, 255, 30, 255, "target_green"); // 緑検出用 // MODIFIED
+      process_color(msg, 150, 190, 70, 255, 30, 255, "target_red"); // 赤検出用 // MODIFIED
+      process_color(msg, 0, 30, 70, 255, 30, 255, "target_red2"); // きもい赤検出用 // MODIFIED
+
+      process_color(msg, 30, 80, 100, 255, 30, 255, "target_yellow"); // 黄検出用 // MODIFIED
     }
   }
 
@@ -190,5 +192,8 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+
+
 
 
