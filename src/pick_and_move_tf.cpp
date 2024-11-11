@@ -104,16 +104,16 @@ private:
   {
 
     // 色の選択をするための変数を追加 // MODIFIED
-    // target_colorを"target_blue"、"target_red"、"target_green"のいずれかに設定
-    std::string target_color = "target_blue";
+    // target_frameを"target_blue"、"target_red"、"target_green"のいずれかに設定
+    std::string target_frame = "target_blue";
     
     
-    // target_colorのtf位置姿勢を取得
+    // target_frameのtf位置姿勢を取得
     geometry_msgs::msg::TransformStamped tf_msg;
     
     try {
       tf_msg = tf_buffer_->lookupTransform(
-        "base_link", target_color, // MODIFIED
+        "base_link", target_frame, // MODIFIED
         tf2::TimePointZero);
     } catch (const tf2::TransformException & ex) {
       RCLCPP_INFO(
