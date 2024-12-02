@@ -31,6 +31,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "cv_bridge/cv_bridge.h"
 #include "image_geometry/pinhole_camera_model.h"
+#include <std_msgs/msg/string.hpp>	// MODIFIED
 using std::placeholders::_1;
 
 class ImageSubscriber : public rclcpp::Node
@@ -49,9 +50,12 @@ public:
     camera_info_subscription_ = this->create_subscription<sensor_msgs::msg::CameraInfo>(
       "/camera/color/camera_info", 10, std::bind(&ImageSubscriber::camera_info_callback, this, _1));
 
+    color_subscription_ = this->create_subscription<std_msgs::msg::String>(		// MODIFIED
+      "/selected_color", 10, std::bind(&ImageSubscriber::color_callback, this, _1));	
+
     image_thresholded_publisher_ =
       this->create_publisher<sensor_msgs::msg::Image>("image_thresholded", 10);
-
+      
     tf_broadcaster_ =
       std::make_unique<tf2_ros::TransformBroadcaster>(*this);
   }
@@ -65,16 +69,29 @@ private:
   sensor_msgs::msg::Image::SharedPtr depth_image_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
+  
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr color_subscription_;	// MODIFIED
+  std::string target_color_;  // 指定された色を保持
+
+
+  void color_callback(const std_msgs::msg::String::SharedPtr msg)
+  {
+    target_color_ = msg->data;  // 受け取った色を設定
+    RCLCPP_INFO(this->get_logger(), "Selected color: %s", target_color_.c_str());
+  }
+
   void image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
   {
-    // カメラのパラメータを取得してから処理を行う
     if (camera_info_ && depth_image_) {
-      // 青、赤、緑のそれぞれの色を検出する処理に分ける // MODIFIED
-      process_color(msg, 100, 125, 100, 255, 30, 255, "target_blue"); // 青検出用 // MODIFIED
-      process_color(msg, 150, 190, 70, 255, 30, 255, "target_red"); // 赤検出用 // MODIFIED
-      process_color(msg, 0, 30, 70, 255, 30, 255, "target_red2"); // きもい赤検出用 // MODIFIED
-
-      process_color(msg, 30, 80, 100, 255, 30, 255, "target_yellow"); // 黄検出用 // MODIFIED
+      if (target_color_ == "target_blue") {
+        process_color(msg, 100, 125, 100, 255, 30, 255, "target_blue");
+      }
+      if (target_color_ == "target_red") {
+        process_color(msg, 150, 190, 70, 255, 30, 255, "target_red");
+      }
+      if (target_color_ == "target_yellow") {
+        process_color(msg, 30, 80, 100, 255, 30, 255, "target_yellow");
+      }
     }
   }
 

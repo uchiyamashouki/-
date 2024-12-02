@@ -47,6 +47,16 @@ ament_target_dependencies(pick_and_move_tf
     tf2_geometry_msgs
 )
 
+
+add_executable(color_selector	# MODIFIED
+  src/color_selector.cpp  	
+)
+ament_target_dependencies(color_selector
+  rclcpp
+  std_msgs
+)
+
+
 # src下のソースコードはTARGETSで
 # launch下のlaunchファイルはDIRECTORYで
 install(TARGETS

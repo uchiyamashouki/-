@@ -62,6 +62,12 @@ def generate_launch_description():
                           package='itudemo_sazae',
                           executable='color_detection',
                           output='screen')
+                          
+    # 画像処理のコードを起動するのはこっち
+    detection_node = Node(# name='color_detection'
+                          package='itudemo_sazae',
+                          executable='color_selector.cpp',
+                          output='screen')
 
     return LaunchDescription([
         declare_use_sim_time,
