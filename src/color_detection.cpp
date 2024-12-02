@@ -83,116 +83,113 @@ private:
   void image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
   {
   	
- 	target_color_ = "target_blue";
+ 	//target_color_ = "target_yellow";
  	
     if (camera_info_ && depth_image_) {
-      if (target_color_ == "target_blue") {
-        process_color(msg, 100, 125, 100, 255, 30, 255, "target_blue");
-      }
-      if (target_color_ == "target_red") {
-        process_color(msg, 150, 190, 70, 255, 30, 255, "target_red");
-      }
-      if (target_color_ == "target_yellow") {
-        process_color(msg, 30, 80, 100, 255, 30, 255, "target_yellow");
-      }
+      if (target_color_ == "target_blue")
+        process_color(msg, 100, 125, 100, 255, 30, 255);
+      if (target_color_ == "target_red")
+        process_color(msg, 150, 190, 70, 255, 30, 255);
+      if (target_color_ == "target_yellow") 
+        process_color(msg, 30, 80, 100, 255, 30, 255);
     }
   }
 
   // 物体検出とTF配信を行う関数を追加 // MODIFIED
-  void process_color(const sensor_msgs::msg::Image::SharedPtr &msg, int low_h, int high_h, int low_s, int high_s, int low_v, int high_v, const std::string &frame_id)
+  void process_color(const sensor_msgs::msg::Image::SharedPtr &msg, int LOW_H, int HIGH_H, int LOW_S, int HIGH_S, int LOW_V, int HIGH_V)
   {
-    // ウェブカメラの画像を受け取る
-    auto cv_img = cv_bridge::toCvShare(msg, msg->encoding);
+      // ウェブカメラの画像を受け取る
+      auto cv_img = cv_bridge::toCvShare(msg, msg->encoding);
 
-    // 画像をRGBからHSVに変換
-    cv::cvtColor(cv_img->image, cv_img->image, cv::COLOR_RGB2HSV);
+      // 画像をRGBからHSVに変換
+      cv::cvtColor(cv_img->image, cv_img->image, cv::COLOR_RGB2HSV);
 
-    // 画像処理用の変数を用意
-    cv::Mat img_thresholded;
+      // 画像処理用の変数を用意
+      cv::Mat img_thresholded;
 
-    // 画像の二値化
-    cv::inRange(
-      cv_img->image,
-      cv::Scalar(low_h, low_s, low_v),
-      cv::Scalar(high_h, high_s, high_v),
-      img_thresholded);
+      // 画像の二値化
+      cv::inRange(
+        cv_img->image,
+        cv::Scalar(LOW_H, LOW_S, LOW_V),
+        cv::Scalar(HIGH_H, HIGH_S, HIGH_V),
+        img_thresholded);
 
-    // ノイズ除去の処理
-    cv::morphologyEx(
-      img_thresholded,
-      img_thresholded,
-      cv::MORPH_OPEN,
-      cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));
+      // ノイズ除去の処理
+      cv::morphologyEx(
+        img_thresholded,
+        img_thresholded,
+        cv::MORPH_OPEN,
+        cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));
 
-    // 穴埋めの処理
-    cv::morphologyEx(
-      img_thresholded,
-      img_thresholded,
-      cv::MORPH_CLOSE,
-      cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));
+      // 穴埋めの処理
+      cv::morphologyEx(
+        img_thresholded,
+        img_thresholded,
+        cv::MORPH_CLOSE,
+        cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));
 
-    // 画像の検出領域におけるモーメントを計算
-    cv::Moments moment = moments(img_thresholded);
-    double d_m01 = moment.m01;
-    double d_m10 = moment.m10;
-    double d_area = moment.m00;
+      // 画像の検出領域におけるモーメントを計算
+      cv::Moments moment = moments(img_thresholded);
+      double d_m01 = moment.m01;
+      double d_m10 = moment.m10;
+      double d_area = moment.m00;
 
-    // 検出した領域のピクセル数が10000より大きい場合
-    if (d_area > 10000) {
-      // カメラモデル作成
-      image_geometry::PinholeCameraModel camera_model;
+      // 検出した領域のピクセル数が10000より大きい場合
+      if (d_area > 10000) {
+        // カメラモデル作成
+        image_geometry::PinholeCameraModel camera_model;
 
-      // カメラのパラメータを設定
-      camera_model.fromCameraInfo(camera_info_);
+        // カメラのパラメータを設定
+        camera_model.fromCameraInfo(camera_info_);
 
-      // 画像座標系における把持対象物の位置（2D）
-      const double pixel_x = d_m10 / d_area;
-      const double pixel_y = d_m01 / d_area;
-      const cv::Point2d point(pixel_x, pixel_y);
+        // 画像座標系における把持対象物の位置（2D）
+        const double pixel_x = d_m10 / d_area;
+        const double pixel_y = d_m01 / d_area;
+        const cv::Point2d point(pixel_x, pixel_y);
 
-      // 補正後の画像座標系における把持対象物の位置を取得（2D）
-      const cv::Point2d rect_point = camera_model.rectifyPoint(point);
+        // 補正後の画像座標系における把持対象物の位置を取得（2D）
+        const cv::Point2d rect_point = camera_model.rectifyPoint(point);
 
-      // カメラ座標系から見た把持対象物の方向（Ray）を取得する
-      const cv::Point3d ray = camera_model.projectPixelTo3dRay(rect_point);
+        // カメラ座標系から見た把持対象物の方向（Ray）を取得する
+        const cv::Point3d ray = camera_model.projectPixelTo3dRay(rect_point);
 
-      // 把持対象物までの距離を取得
-      // 把持対象物の表面より少し奥を掴むように設定
-      const double DEPTH_OFFSET = 0.015;
-      const auto cv_depth = cv_bridge::toCvShare(depth_image_, depth_image_->encoding);
-      // カメラから把持対象物の表面までの距離
-      const auto front_distance = cv_depth->image.at<ushort>(point) / 1000.0;
-      const auto center_distance = front_distance + DEPTH_OFFSET;
+        // 把持対象物までの距離を取得
+        // 把持対象物の表面より少し奥を掴むように設定
+        const double DEPTH_OFFSET = 0.015;
+        const auto cv_depth = cv_bridge::toCvShare(depth_image_, depth_image_->encoding);
+        // カメラから把持対象物の表面までの距離
+        const auto front_distance = cv_depth->image.at<ushort>(point) / 1000.0;
+        const auto center_distance = front_distance + DEPTH_OFFSET;
 
-      // 距離を取得できないか遠すぎる場合は把持しない
-      const double DEPTH_MAX = 0.5;
-      const double DEPTH_MIN = 0.2;
-      if (center_distance < DEPTH_MIN || center_distance > DEPTH_MAX) {
-        RCLCPP_INFO_STREAM(this->get_logger(), "Failed to get depth at" << point << ".");
-        return;
+        // 距離を取得できないか遠すぎる場合は把持しない
+        const double DEPTH_MAX = 0.5;
+        const double DEPTH_MIN = 0.2;
+        if (center_distance < DEPTH_MIN || center_distance > DEPTH_MAX) {
+          RCLCPP_INFO_STREAM(this->get_logger(), "Failed to get depth at" << point << ".");
+          return;
+        }
+
+        // 把持対象物の位置を計算
+        cv::Point3d object_position(
+          ray.x * center_distance,
+          ray.y * center_distance,
+          ray.z * center_distance);
+
+        // 把持対象物の位置をTFに配信
+        geometry_msgs::msg::TransformStamped t;
+        t.header = msg->header;
+        t.child_frame_id = "target_0";
+        t.transform.translation.x = object_position.x;
+        t.transform.translation.y = object_position.y;
+        t.transform.translation.z = object_position.z;
+        tf_broadcaster_->sendTransform(t);
+
+        // 閾値による二値化画像を配信
+        sensor_msgs::msg::Image::SharedPtr img_thresholded_msg =
+          cv_bridge::CvImage(msg->header, "mono8", img_thresholded).toImageMsg();
+        image_thresholded_publisher_->publish(*img_thresholded_msg);
       }
-
-      // 把持対象物の位置を計算
-      cv::Point3d object_position(
-        ray.x * center_distance,
-        ray.y * center_distance,
-        ray.z * center_distance);
-
-      // 把持対象物の位置をTFに配信
-      geometry_msgs::msg::TransformStamped t;
-      t.header = msg->header;
-      t.child_frame_id = frame_id; // 個別のフレームIDを設定 // MODIFIED
-      t.transform.translation.x = object_position.x;
-      t.transform.translation.y = object_position.y;
-      t.transform.translation.z = object_position.z;
-      tf_broadcaster_->sendTransform(t);
-
-      // 閾値による二値化画像を配信
-      sensor_msgs::msg::Image::SharedPtr img_thresholded_msg =
-        cv_bridge::CvImage(msg->header, "mono8", img_thresholded).toImageMsg();
-      image_thresholded_publisher_->publish(*img_thresholded_msg);
     }
-  }
 
   void camera_info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr msg)
   {
@@ -212,8 +209,6 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
-
-
 
 
 

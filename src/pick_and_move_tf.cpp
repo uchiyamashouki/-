@@ -45,7 +45,7 @@ public:
   PickAndPlaceTf(
     rclcpp::Node::SharedPtr move_group_arm_node,
     rclcpp::Node::SharedPtr move_group_gripper_node)
-  : Node("pick_and_move_tf_node")
+  : Node("pick_and_place_tf_node")
   {
     using namespace std::placeholders;
     move_group_arm_ = std::make_shared<MoveGroupInterface>(move_group_arm_node, "arm");
@@ -67,15 +67,15 @@ public:
     moveit_msgs::msg::JointConstraint joint_constraint;
     joint_constraint.joint_name = "crane_x7_lower_arm_fixed_part_joint";
     joint_constraint.position = 0.0;
-    joint_constraint.tolerance_above = angles::from_degrees(90);
-    joint_constraint.tolerance_below = angles::from_degrees(90);
+    joint_constraint.tolerance_above = angles::from_degrees(30);
+    joint_constraint.tolerance_below = angles::from_degrees(30);
     joint_constraint.weight = 1.0;
     constraints.joint_constraints.push_back(joint_constraint);
 
     joint_constraint.joint_name = "crane_x7_upper_arm_revolute_part_twist_joint";
     joint_constraint.position = 0.0;
-    joint_constraint.tolerance_above = angles::from_degrees(90);
-    joint_constraint.tolerance_below = angles::from_degrees(90);
+    joint_constraint.tolerance_above = angles::from_degrees(30);
+    joint_constraint.tolerance_below = angles::from_degrees(30);
     joint_constraint.weight = 0.8;
     constraints.joint_constraints.push_back(joint_constraint);
 
@@ -102,18 +102,12 @@ public:
 private:
   void on_timer()
   {
-
-    // 色の選択をするための変数を追加 // MODIFIED
-    // target_frameを"target_blue"、"target_red"、"target_yellow"のいずれかに設定
-    std::string target_frame = "target_blue";
-    
-    
-    // target_frameのtf位置姿勢を取得
+    // target_0のtf位置姿勢を取得
     geometry_msgs::msg::TransformStamped tf_msg;
-    
+
     try {
       tf_msg = tf_buffer_->lookupTransform(
-        "base_link", target_frame, // MODIFIED
+        "base_link", "target_0",
         tf2::TimePointZero);
     } catch (const tf2::TransformException & ex) {
       RCLCPP_INFO(
@@ -252,14 +246,13 @@ int main(int argc, char ** argv)
   auto move_group_gripper_node = rclcpp::Node::make_shared("move_group_gripper_node", node_options);
 
   rclcpp::executors::MultiThreadedExecutor exec;
-  auto pick_and_move_tf_node = std::make_shared<PickAndPlaceTf>(
+  auto pick_and_place_tf_node = std::make_shared<PickAndPlaceTf>(
     move_group_arm_node,
     move_group_gripper_node);
-  exec.add_node(pick_and_move_tf_node);
+  exec.add_node(pick_and_place_tf_node);
   exec.add_node(move_group_arm_node);
   exec.add_node(move_group_gripper_node);
   exec.spin();
   rclcpp::shutdown();
   return 0;
 }
-
