@@ -58,15 +58,15 @@ def generate_launch_description():
                                     robot_description_semantic,
                                     kinematics_yaml])
     # 画像処理のコードを起動するのはこっち
-    detection_node = Node(# name='color_detection'
-                          package='itudemo_sazae',
-                          executable='color_detection',
-                          output='screen')
+#    detection_node = Node(# name='color_detection'
+#                          package='itudemo_sazae',
+#                          executable='color_detection',
+#                          output='screen')
                           
     # 画像処理のコードを起動するのはこっち
     detection_node = Node(# name='color_detection'
                           package='itudemo_sazae',
-                          executable='color_selector.cpp',
+                          executable='color_selector',
                           output='screen')
 
     return LaunchDescription([

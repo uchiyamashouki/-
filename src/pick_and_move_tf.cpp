@@ -105,7 +105,7 @@ private:
 
     // 色の選択をするための変数を追加 // MODIFIED
     // target_frameを"target_blue"、"target_red"、"target_yellow"のいずれかに設定
-    std::string target_frame = "target_red2";
+    std::string target_frame = "target_blue";
     
     
     // target_frameのtf位置姿勢を取得

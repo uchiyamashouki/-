@@ -49,7 +49,7 @@ ament_target_dependencies(pick_and_move_tf
 
 
 add_executable(color_selector	# MODIFIED
-  src/color_selector.cpp  	
+  src/color_selector.cpp	
 )
 ament_target_dependencies(color_selector
   rclcpp
@@ -66,6 +66,11 @@ install(TARGETS
 
 install(TARGETS
   pick_and_move_tf
+  DESTINATION lib/${PROJECT_NAME}/
+)
+
+install(TARGETS
+  color_selector
   DESTINATION lib/${PROJECT_NAME}/
 )
 

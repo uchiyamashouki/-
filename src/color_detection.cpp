@@ -82,6 +82,9 @@ private:
 
   void image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
   {
+  	
+ 	target_color_ = "target_blue";
+ 	
     if (camera_info_ && depth_image_) {
       if (target_color_ == "target_blue") {
         process_color(msg, 100, 125, 100, 255, 30, 255, "target_blue");
