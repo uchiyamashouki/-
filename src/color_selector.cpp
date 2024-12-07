@@ -9,6 +9,8 @@ public:
 
     auto msg = std::make_shared<std_msgs::msg::String>();
     msg->data = "target_blue";  // 指定する色
+    
+    RCLCPP_INFO(this->get_logger(), "aaaaaaaaaaaa csele fin");/////////////////////////
 
     // 色を`color_detection`ノードに送信
     color_publisher_ = this->create_publisher<std_msgs::msg::String>("/selected_color", 10);

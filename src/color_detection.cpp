@@ -78,6 +78,9 @@ private:
   {
     target_color_ = msg->data;  // 受け取った色を設定
     RCLCPP_INFO(this->get_logger(), "Selected color: %s", target_color_.c_str());
+    
+    RCLCPP_INFO(this->get_logger(), "bbbbbbbbbbbbb cdetec fin");/////////////////////////
+    
   }
 
   void image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
