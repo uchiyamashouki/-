@@ -71,21 +71,17 @@ private:
 
   
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr color_subscription_;	// MODIFIED
-  std::string target_color_;  // 指定された色を保持
+  std::string target_color_ = "not_selected";  
 
 
-  void color_callback(const std_msgs::msg::String::SharedPtr msg)
+  void color_callback(const std_msgs::msg::String::SharedPtr msg)	// MODIFIED
   {
     target_color_ = msg->data;  // 受け取った色を設定
     RCLCPP_INFO(this->get_logger(), "Selected color: %s", target_color_.c_str());
-    
-    RCLCPP_INFO(this->get_logger(), "bbbbbbbbbbbbb cdetec fin");/////////////////////////
-    
   }
 
   void image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
   {
-  	
  	//target_color_ = "target_yellow";
  	
     if (camera_info_ && depth_image_) {
