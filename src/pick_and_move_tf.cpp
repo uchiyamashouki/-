@@ -165,39 +165,35 @@ private:
     const double GRIPPER_OPEN = angles::from_degrees(60.0);
     const double GRIPPER_CLOSE = angles::from_degrees(20.0);
 
-    // 何かを掴んでいた時のためにハンドを開閉
+     // 何かを掴んでいた時のためにハンドを開閉
     control_gripper(GRIPPER_OPEN);
     control_gripper(GRIPPER_DEFAULT);
 
     // 掴む準備をする
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+    control_arm(target_position.x() - 0.2, target_position.y(), target_position.z() + 0.03, 90, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.07, -180, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.03, 90, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
 
-    // 持ち上げる
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+    // 一度初期姿勢に戻る
+    init_pose();
 
     // 移動する
-    control_arm(0.1, 0.2, 0.2, -180, 0, 90);
+    // control_arm(0.3, 0.15, 0.2, 90, 0, 90);
 
     // 下ろす
-    control_arm(0.1, 0.2, 0.13, -180, 0, 90);
+    control_arm(0.3, 0, 0.1, 90, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
-    // 少しだけハンドを持ち上げる
-    control_arm(0.1, 0.2, 0.2, -180, 0, 90);
-
     // 初期姿勢に戻る
-    // control_arm(0.15, 0.0, 0.3, -180, 0, 90);
     init_pose();
 
     // ハンドを閉じる
@@ -246,10 +242,10 @@ int main(int argc, char ** argv)
   auto move_group_gripper_node = rclcpp::Node::make_shared("move_group_gripper_node", node_options);
 
   rclcpp::executors::MultiThreadedExecutor exec;
-  auto pick_and_place_tf_node = std::make_shared<PickAndPlaceTf>(
+  auto pick_and_move_tf_node = std::make_shared<PickAndPlaceTf>(
     move_group_arm_node,
     move_group_gripper_node);
-  exec.add_node(pick_and_place_tf_node);
+  exec.add_node(pick_and_move_tf_node);
   exec.add_node(move_group_arm_node);
   exec.add_node(move_group_gripper_node);
   exec.spin();
