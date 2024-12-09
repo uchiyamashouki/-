@@ -8,7 +8,7 @@ public:
   {
     auto msg = std::make_shared<std_msgs::msg::String>();
     
-    msg->data = "target_black";  // 指定する色
+    msg->data = "target_blue";  // 指定する色
   	//target_blue, target_red, target_yellow;
 
     color_publisher_ = this->create_publisher<std_msgs::msg::String>("/selected_color", 10);

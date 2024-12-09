@@ -163,20 +163,20 @@ private:
   {
     const double GRIPPER_DEFAULT = 0.0;
     const double GRIPPER_OPEN = angles::from_degrees(60.0);
-    const double GRIPPER_CLOSE = angles::from_degrees(20.0);
+    const double GRIPPER_CLOSE = angles::from_degrees(25.0);
 
-     // 何かを掴んでいた時のためにハンドを開閉
+    // 何かを掴んでいた時のためにハンドを開閉
     control_gripper(GRIPPER_OPEN);
     control_gripper(GRIPPER_DEFAULT);
 
     // 掴む準備をする
-    control_arm(target_position.x() - 0.2, target_position.y(), target_position.z() + 0.03, 90, 0, 90);
+    control_arm(target_position.x() - 0.05, target_position.y(), target_position.z() + 0.01, 90, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.03, 90, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.01, 90, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
@@ -233,6 +233,7 @@ private:
   tf2::Stamped<tf2::Transform> tf_past_;
 };
 
+
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
@@ -242,10 +243,10 @@ int main(int argc, char ** argv)
   auto move_group_gripper_node = rclcpp::Node::make_shared("move_group_gripper_node", node_options);
 
   rclcpp::executors::MultiThreadedExecutor exec;
-  auto pick_and_move_tf_node = std::make_shared<PickAndPlaceTf>(
+  auto pick_and_place_tf_node = std::make_shared<PickAndPlaceTf>(
     move_group_arm_node,
     move_group_gripper_node);
-  exec.add_node(pick_and_move_tf_node);
+  exec.add_node(pick_and_place_tf_node);
   exec.add_node(move_group_arm_node);
   exec.add_node(move_group_gripper_node);
   exec.spin();
