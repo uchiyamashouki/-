@@ -74,6 +74,11 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}/
 )
 
+install(PROGRAMS
+  src/hand_pose_detection.py
+  DESTINATION lib/${PROJECT_NAME}/
+)
+
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/

@@ -49,7 +49,8 @@ def generate_launch_description():
         'use_sim_time', default_value='false',
         description=('Set true when using the gazebo simulator.')
     )
-    # アームの動きのコードを起動するのはこっち
+    
+    # アームの動きのコード
     picking_node = Node(# name="pick_and_move_tf",
                         package='itudemo_sazae',
                         executable='pick_and_move_tf',
@@ -57,22 +58,29 @@ def generate_launch_description():
                         parameters=[{'robot_description': description_loader.load()},
                                     robot_description_semantic,
                                     kinematics_yaml])
-    # 画像処理のコードを起動するのはこっち
+    # 画像処理のコード
     detection_node = Node(# name='color_detection'
                           package='itudemo_sazae',
                           executable='color_detection',
                           output='screen')
                           
-    # 画像処理のコードを起動するのはこっち
-    select_node = Node(# name='color_detection'
+    # 色選択のコード
+    select_node = Node(# name='color_selector'
                           package='itudemo_sazae',
                           executable='color_selector',
+                          output='screen')
+                          
+    # 手の認識のコード
+    hand_node = Node(# name='hand_pose_detection'
+                          package='itudemo_sazae',
+                          executable='hand_pose_detection.py',
                           output='screen')
 
     return LaunchDescription([
         declare_use_sim_time,
         SetParameter(name='use_sim_time', value=LaunchConfiguration('use_sim_time')),
-        select_node,
         picking_node,
         detection_node,
+        hand_node,
+        select_node,
     ])

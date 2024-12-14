@@ -23,7 +23,14 @@
   <depend>rclcpp</depend>
   <depend>realsense2_camera</depend>
   <depend>tf2_geometry_msgs</depend>
+  
   <depend>std_msgs</depend> 		 <!-- MODIFIED -->
+  
+  <exec_depend>python3</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>opencv-python</exec_depend>
+  <exec_depend>mediapipe</exec_depend>
+  <exec_depend>numpy</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

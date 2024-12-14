@@ -6,27 +6,39 @@ class ColorSelector : public rclcpp::Node
 public:
   ColorSelector() : Node("color_selector")
   {
-    auto msg = std::make_shared<std_msgs::msg::String>();
-    
-    msg->data = "target_blue";  // 指定する色
-  	//target_blue, target_red, target_yellow;
-
     color_publisher_ = this->create_publisher<std_msgs::msg::String>("/selected_color", 10);
 
-    // 一定間隔でメッセージを送信するタイマーを設定
-    timer_ = this->create_wall_timer(
-      std::chrono::seconds(10),
-      [this, msg]() {
-        color_publisher_->publish(*msg);
-        RCLCPP_INFO(this->get_logger(), "Color message published: %s", msg->data.c_str());
-        RCLCPP_INFO(this->get_logger(), "aaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\n");
-        timer_->cancel();	//一回だけ実行
+
+    hand_pose_subscriber_ = this->create_subscription<std_msgs::msg::String>(
+      "/hand_pose", 10,
+      [this](const std_msgs::msg::String::SharedPtr msg) {
+        RCLCPP_INFO(this->get_logger(), "Received hand pose: %s", msg->data.c_str());
+        publish_selected_color(msg->data);
       });
   }
 
+          //guu,tyoki,paaaa,
+          //target_blue,target_red,target_yellow
+          
 private:
+  void publish_selected_color(const std::string &hand_pose)
+  {
+    auto msg = std::make_shared<std_msgs::msg::String>();
+    if (hand_pose == "guu")
+      msg->data = "target_blue";
+    else if (hand_pose == "tyoki")
+      msg->data = "target_red";
+    else if (hand_pose == "paaaa")
+      msg->data = "target_yellow";
+
+    color_publisher_->publish(*msg);
+    RCLCPP_INFO(this->get_logger(), "Published selected color: %s", msg->data.c_str());
+    RCLCPP_INFO(this->get_logger(), "aaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\n");
+  }
+
+
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr color_publisher_;
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr hand_pose_subscriber_;
 };
 
 int main(int argc, char **argv)
