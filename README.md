@@ -64,7 +64,7 @@ realsense-viewer
 ## インストール
 ```
 cd  ~/ros2_ws/src
-
+https://github.com/uchiyamashouki/sazaesann.git
 ```
 ## ビルド
 ```
