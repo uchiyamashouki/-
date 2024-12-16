@@ -110,8 +110,8 @@ class HandPosePublisher(Node):
                     self.previous_pose_time = time.time()
                 
                 if current_pose and time.time() - self.previous_pose_time >= self.pose_hold_duration:
-                    self.publisher_.publish(String(data=current_pose))
                     self.get_logger().info(f'Published: {current_pose}')
+                    self.publisher_.publish(String(data=current_pose))
                     self.last_published_time = time.time()
                     self.previous_pose_time = None
             else:

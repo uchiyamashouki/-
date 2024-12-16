@@ -36,6 +36,7 @@
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
 #include "std_msgs/msg/string.hpp"
+
 using namespace std::chrono_literals;
 using MoveGroupInterface = moveit::planning_interface::MoveGroupInterface;
 
@@ -48,6 +49,7 @@ public:
   : Node("pick_and_place_tf_node")
   {
     using namespace std::placeholders;
+
     move_group_arm_ = std::make_shared<MoveGroupInterface>(move_group_arm_node, "arm");
     move_group_arm_->setMaxVelocityScalingFactor(0.7);
     move_group_arm_->setMaxAccelerationScalingFactor(0.7);
@@ -97,9 +99,20 @@ public:
 
     timer_ = this->create_wall_timer(
       500ms, std::bind(&PickAndPlaceTf::on_timer, this));
+    timer_->cancel();  // 初期状態でtimerを停止
+
+    // timerトリガー用
+    color_subscription_ = this->create_subscription<std_msgs::msg::String>(
+      "/selected_color", 10, std::bind(&PickAndPlaceTf::color_callback, this, _1));
   }
 
 private:
+  void color_callback(const std_msgs::msg::String::SharedPtr /*msg*/)
+  {
+    RCLCPP_INFO(this->get_logger(), "Color selected, starting timer");
+    timer_->reset();  // timerを再開
+  }
+
   void on_timer()
   {
     // target_0のtf位置姿勢を取得
@@ -138,7 +151,8 @@ private:
             tf.getOrigin().setZ(TARGET_Z_MIN_LIMIT);
           }
           picking(tf.getOrigin());
-        }
+          timer_->cancel();  // pickingが完了したらtimerを停止
+          RCLCPP_INFO(this->get_logger(), "Picking complete, stopping timer");        }
       } else {
         tf_past_ = tf;
       }
@@ -165,21 +179,20 @@ private:
     const double GRIPPER_OPEN = angles::from_degrees(60.0);
     const double GRIPPER_CLOSE = angles::from_degrees(25.0);
 
-    // 何かを掴んでいた時のためにハンドを開閉
-    control_gripper(GRIPPER_OPEN);
-    control_gripper(GRIPPER_DEFAULT);
-
-    // 掴む準備をする
-    control_arm(target_position.x() - 0.05, target_position.y(), target_position.z() + 0.01, 90, 0, 90);
-
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
+    // 掴む準備をする
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.01, 90, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.07, -180, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
+
+    // 持ち上げる
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 一度初期姿勢に戻る
     init_pose();
@@ -230,6 +243,7 @@ private:
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
   rclcpp::TimerBase::SharedPtr timer_{nullptr};
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr color_subscription_;
   tf2::Stamped<tf2::Transform> tf_past_;
 };
 
@@ -253,3 +267,4 @@ int main(int argc, char ** argv)
   rclcpp::shutdown();
   return 0;
 }
+
