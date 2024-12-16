@@ -8,6 +8,7 @@ ROS2パッケージです。
   上田先生の[動画](https://www.youtube.com/watch?v=mBhtD08f5KY)及び[インストールスクリプト](https://github.com/ryuichiueda/ros2_setup_scripts)を参照し、インストールを行ってください。  
 - CRANE-X7及び関連パッケージのインストール
   [RT社リポジトリ](https://github.com/rt-net/crane_x7_ros/tree/ros2)よりインストールできます。[RT社のブログ](https://rt-net.jp/humanoid/archives/4653)でも解説されています。いかにインストールコマンドを載せます。
+
 '''
 # Setup ROS environment
 source /opt/ros/humble/setup.bash
