@@ -177,7 +177,7 @@ private:
   {
     const double GRIPPER_DEFAULT = 0.0;
     const double GRIPPER_OPEN = angles::from_degrees(60.0);
-    const double GRIPPER_CLOSE = angles::from_degrees(25.0);
+    const double GRIPPER_CLOSE = angles::from_degrees(20.0);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
@@ -186,7 +186,7 @@ private:
     control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.07, -180, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.01, -180, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
