@@ -85,4 +85,5 @@ source ~/.bashrc
 # 動作確認済み環境
 
 # ライセンス
-
+このパッケージはApache License, Version 2.0に基づき公開されています。
+ライセンスの全文は[LICENSE]([LICENSE)から確認できます。
