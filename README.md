@@ -1,5 +1,5 @@
 # sazaesann
-このパッケージは、CRANE-X7とRealsenseD435を使用しじゃんけんをする
+このパッケージは、CRANE-X7とRealsenseD435を使用し、人間の手とじゃんけんをする
 ROS2パッケージです。
 
 ## このパッケージを使う前に
@@ -26,7 +26,7 @@ cd ~/ros2_ws
 colcon build --symlink-install
 source ~/ros2_ws/install/setup.bash
 ```
-(<https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation>より転載)  
+[RT社リポジトリREADME.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より転載)  
 また, インストールが完了したらパッケージに含まれるサンプルコードをシミュレータ（Gazebo）で試すことができます。詳しくは[こちら](https://github.com/rt-net/crane_x7_ros/tree/ros2/crane_x7_examples)を参照してください。  
 - USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
 ```
