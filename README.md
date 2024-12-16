@@ -27,6 +27,7 @@ cd ~/ros2_ws
 colcon build --symlink-install
 source ~/ros2_ws/install/setup.bash
 '''
+
 (<https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation>より転載)  
 また, インストールが完了したらパッケージに含まれるサンプルコードをシミュレータ（Gazebo）で試すことができます。詳しくは[こちら](https://github.com/rt-net/crane_x7_ros/tree/ros2/crane_x7_examples)を参照してください。  
 - USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
