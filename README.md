@@ -93,4 +93,4 @@ Ubuntu 22.04
 
 # ライセンス
 このパッケージはApache License, Version 2.0に基づき公開されています。
-ライセンスの全文は[LICENSE]([LICENSE)から確認できます。
+ライセンスの全文は[LICENSE](LICENSE)から確認できます。
