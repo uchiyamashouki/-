@@ -88,7 +88,7 @@ source ~/.bashrc
 ### 
 
 ## 動作確認済み環境
-Ubuntu 20.04
+Ubuntu 22.04
 （Linux上でないとGazeboが起動しない）
 
 # ライセンス
