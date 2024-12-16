@@ -8,8 +8,7 @@ ROS2パッケージです。
   上田先生の[動画](https://www.youtube.com/watch?v=mBhtD08f5KY)及び[インストールスクリプト](https://github.com/ryuichiueda/ros2_setup_scripts)を参照し、インストールを行ってください。  
 - CRANE-X7及び関連パッケージのインストール
   [RT社リポジトリ](https://github.com/rt-net/crane_x7_ros/tree/ros2)よりインストールできます。[RT社のブログ](https://rt-net.jp/humanoid/archives/4653)でも解説されています。いかにインストールコマンドを載せます。
-
-'''
+```
 # Setup ROS environment
 source /opt/ros/humble/setup.bash
 
@@ -26,12 +25,11 @@ rosdep install -r -y -i --from-paths .
 cd ~/ros2_ws
 colcon build --symlink-install
 source ~/ros2_ws/install/setup.bash
-'''
-
+```
 (<https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation>より転載)  
 また, インストールが完了したらパッケージに含まれるサンプルコードをシミュレータ（Gazebo）で試すことができます。詳しくは[こちら](https://github.com/rt-net/crane_x7_ros/tree/ros2/crane_x7_examples)を参照してください。  
 - USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
-'''
+```
 # 一時的な付与の場合(上手くいかない時はUSBポートの名前を確認してください)
 sudo chmod 666 /dev/ttyUSB0
 
@@ -61,15 +59,15 @@ sudo apt-get install librealsense2-utils
 
 # セットアップできているか確認（ビューワーの起動）:  
 realsense-viewer
-'''
+```
 # このパッケージの使い方
 ## インストール
-'''
+```
 cd  ~/ros2_ws/src
 
-'''
+```
 ## ビルド
-'''
+```
 cd ~/ros2_ws
 colcon build
 source ~/ros2_ws/install/setup.bash
@@ -79,7 +77,7 @@ source ~/ros2_ws/install/setup.bash
 echo 'source ~/ros2_ws/install/setup.bash' >> ~/.bachrc
 # .bashrcに書いてあるとき下のコマンドが代わりにできます.
 source ~/.bashrc
-'''
+```
 ## 実行
 シミュレータ（Gazebo）あるいは実機で動かす際には、可視化ツール（RViz）とGazeboの両方を起動する必要があります。詳しくは[こちら](https://github.com/rt-net/crane_x7_ros/tree/ros2/crane_x7_examples#3-move_group%E3%81%A8controller%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%99%E3%82%8B)を確認してください。
 ### 
