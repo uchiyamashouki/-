@@ -1,4 +1,4 @@
-// Copyright 2022 RT Corporation
+// Copyright 2024 tentoshinz
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Reference:
-// https://github.com/ros-planning/moveit2_tutorials/blob
-// /a547cf49ff7d1fe16a93dfe020c6027bcb035b51/doc/move_group_interface
-// /src/move_group_interface_tutorial.cpp
-// https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Listener-Cpp.html
 
 #include <chrono>
 #include <cmath>
