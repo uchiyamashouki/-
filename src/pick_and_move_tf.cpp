@@ -1,4 +1,4 @@
-// Copyright 2022 RT Corporation
+// Copyright 2024 tentoshinz
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Reference:
-// https://github.com/ros-planning/moveit2_tutorials/blob
-// /a547cf49ff7d1fe16a93dfe020c6027bcb035b51/doc/move_group_interface
-// /src/move_group_interface_tutorial.cpp
-// https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Listener-Cpp.html
 
 #include <chrono>
 #include <cmath>
@@ -89,8 +84,8 @@ public:
     // crane_x7_upper_arm_revolute_part_rotate_jointにかかる負荷が高いため長時間の使用に向いておりません
     // control_arm(0.15, 0.0, 0.3, -180, 0, 90);
 
-    // 関節への負荷が低い撮影姿勢
-    init_pose();
+    // 関節への負荷が低い 手の 撮影姿勢
+    hand_detec_pose();
 
     tf_buffer_ =
       std::make_unique<tf2_ros::Buffer>(this->get_clock());
@@ -110,6 +105,7 @@ private:
   void color_callback(const std_msgs::msg::String::SharedPtr /*msg*/)
   {
     RCLCPP_INFO(this->get_logger(), "Color selected, starting timer");
+    init_pose();	//ブロックの撮影姿勢
     timer_->reset();  // timerを再開
   }
 
@@ -172,12 +168,25 @@ private:
     move_group_arm_->setJointValueTarget(joint_values);
     move_group_arm_->move();
   }
+  void hand_detec_pose()
+  {
+    std::vector<double> joint_values;
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(90));
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(-160));
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(-15));
+    joint_values.push_back(angles::from_degrees(90));
+    move_group_arm_->setJointValueTarget(joint_values);
+    move_group_arm_->move();
+  }
 
   void picking(tf2::Vector3 target_position)
   {
     const double GRIPPER_DEFAULT = 0.0;
     const double GRIPPER_OPEN = angles::from_degrees(60.0);
-    const double GRIPPER_CLOSE = angles::from_degrees(25.0);
+    const double GRIPPER_CLOSE = angles::from_degrees(24.0);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
@@ -186,7 +195,7 @@ private:
     control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.07, -180, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.02, -180, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
@@ -195,19 +204,26 @@ private:
     control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 一度初期姿勢に戻る
-    init_pose();
+    //init_pose();
 
     // 移動する
-    // control_arm(0.3, 0.15, 0.2, 90, 0, 90);
+    //control_arm(0.3, 0, 0.4, 90, 0, 90);
 
-    // 下ろす
-    control_arm(0.3, 0, 0.1, 90, 0, 90);
+    // 見せびらかす
+    control_arm(0.3, 0, 0.4, 90, 0, 90);
+    control_arm(0.3, 0, 0.4, 110, 0, 90);
+    control_arm(0.3, 0, 0.4, -70, 0, 90);
+    control_arm(0.3, 0, 0.4, 90, 0, 90);
+    
+    //元の位置に戻す
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.03, -180, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
-    // 初期姿勢に戻る
-    init_pose();
+    // 手の撮影姿勢に戻る
+    hand_detec_pose();
 
     // ハンドを閉じる
     control_gripper(GRIPPER_DEFAULT);

@@ -1,4 +1,4 @@
-// Copyright 2023 RT Corporation
+// Copyright 2024 tentoshinz
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Reference:
-// https://www.opencv-srf.com/2010/09/object-detection-using-color-seperation.html
 
 #include <cmath>
 #include <iostream>
@@ -88,7 +86,8 @@ private:
       if (target_color_ == "target_blue")
         process_color(msg, 100, 125, 100, 255, 30, 255);
       if (target_color_ == "target_red")
-        process_color(msg, 150, 190, 70, 255, 30, 255);
+        //process_color(msg, 150, 190, 70, 255, 30, 255);
+        process_color(msg, 0, 20, 70, 255, 30, 255);
       if (target_color_ == "target_yellow") 
         process_color(msg, 30, 80, 100, 255, 30, 255);
     }
