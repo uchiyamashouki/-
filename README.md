@@ -106,7 +106,7 @@ source ~/.bashrc
 $ ros2 launch crane_x7_examples demo.launch.py port_name:=/dev/ttyUSB0 use_d435:=true
 
 # 本パッケージの実行
-$ ros2 launch itudemo_sazae itudemo_sazae.launch.py 
+$ ros2 launch sazaesann sazaesann.launch.py 
 ```
 - 実行したらカメラの前でじゃんけんの手をそれぞれ出し、キーボード操作G,T,P,でその手を保存する。
 キーボードと手は下記の様に対応する。

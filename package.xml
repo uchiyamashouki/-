@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>itudemo_sazae</name>
+  <name>sazaesann</name>
   <version>1.0.0</version>
   <description>Rock-paper-scissors programs to control CRANE-X7 package</description>
   <maintainer email="tentoshinz@gmail.com">tentoshinz</maintainer>
@@ -23,8 +23,7 @@
   <depend>rclcpp</depend>
   <depend>realsense2_camera</depend>
   <depend>tf2_geometry_msgs</depend>
-  
-  <depend>std_msgs</depend> 		 <!-- MODIFIED -->
+  <depend>std_msgs</depend>
   
   <exec_depend>python3</exec_depend>
   <exec_depend>rclpy</exec_depend>

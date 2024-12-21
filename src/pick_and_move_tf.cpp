@@ -1,4 +1,4 @@
-// Copyright 2024 tentoshinz
+// Copyright 2024 cit_sazae24
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,12 +78,6 @@ public:
 
     move_group_arm_->setPathConstraints(constraints);
 
-    // 把持対象を撮影するためカメラを下に向ける
-
-    // 真上から見下ろす撮影姿勢
-    // crane_x7_upper_arm_revolute_part_rotate_jointにかかる負荷が高いため長時間の使用に向いておりません
-    // control_arm(0.15, 0.0, 0.3, -180, 0, 90);
-
     // 関節への負荷が低い 手の 撮影姿勢
     hand_detec_pose();
 
@@ -155,7 +149,7 @@ private:
     }
   }
 
-  void init_pose()
+  void init_pose()	//ブロックの撮影姿勢
   {
     std::vector<double> joint_values;
     joint_values.push_back(angles::from_degrees(0.0));
@@ -168,7 +162,7 @@ private:
     move_group_arm_->setJointValueTarget(joint_values);
     move_group_arm_->move();
   }
-  void hand_detec_pose()
+  void hand_detec_pose()	//手の撮影姿勢
   {
     std::vector<double> joint_values;
     joint_values.push_back(angles::from_degrees(0.0));
@@ -205,9 +199,6 @@ private:
 
     // 一度初期姿勢に戻る
     //init_pose();
-
-    // 移動する
-    //control_arm(0.3, 0, 0.4, 90, 0, 90);
 
     // 見せびらかす
     control_arm(0.3, 0, 0.4, 90, 0, 90);
