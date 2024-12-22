@@ -31,12 +31,11 @@ public:
         publish_selected_color(msg->data);
       });
   }
-
-          //guu,tyoki,paaaa,
-          //target_blue,target_red,target_yellow
           
 private:
   //色選択
+  //guu,tyoki,paaaa,
+  //target_blue,target_red,target_yellow
   void publish_selected_color(const std::string &hand_pose)
   {
     auto msg = std::make_shared<std_msgs::msg::String>();
@@ -49,7 +48,6 @@ private:
 
     color_publisher_->publish(*msg);
     RCLCPP_INFO(this->get_logger(), "Published selected color: %s", msg->data.c_str());
-    RCLCPP_INFO(this->get_logger(), "aaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaa\n");
   }
 
 

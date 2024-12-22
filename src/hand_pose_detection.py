@@ -37,7 +37,6 @@ def landmark2np(hand_landmarks):
         li.append([j.x, j.y, j.z])
     return np.array(li) - li[0]
 
-
 # cos類似度
 def manual_cos(A, B):
     dot = np.sum(A * B, axis=-1)
@@ -73,7 +72,6 @@ class HandPosePublisher(Node):
         self.saved_array = [None, None, None]
         self.start = -100
         self.score = [0, 0, 0]
-        self.saved_no = 0
         self.previous_pose = None
         self.previous_pose_time = None
         self.last_published_time = 0
@@ -117,19 +115,16 @@ class HandPosePublisher(Node):
                 if key == ord('g'):
                     self.saved_array[0] = landmark2np(hand_landmarks)
                     self.start = time.time()
-                    self.saved_no = 1
                     self.get_logger().info('guu saved')
 
                 if key == ord('t'):
                     self.saved_array[1] = landmark2np(hand_landmarks)
                     self.start = time.time()
-                    self.saved_no = 2
                     self.get_logger().info('tyoki saved')
 
                 if key == ord('p'):
                     self.saved_array[2] = landmark2np(hand_landmarks)
                     self.start = time.time()
-                    self.saved_no = 3
                     self.get_logger().info('paaaa saved')
 
                 # ポーズを計算

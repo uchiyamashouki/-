@@ -2,62 +2,65 @@
 このパッケージは、CRANE-X7とRealsenseD435を使用し、人の手とじゃんけんをする
 ROS2パッケージです。
 
-## 依存
-- [ROS2 Humble](https://github.com/ros2)
-- [crane_x7_ros](https://github.com/rt-net/crane_x7_ros/tree/ros2)
-- [IntelRealSense](https://github.com/IntelRealSense)
-- [mediapipe](https://github.com/google-ai-edge/mediapipe)
-- [opencv-python](https://github.com/opencv/opencv-python)
-- [scikit-learn](https://github.com/scikit-learn/scikit-learn)
+## 概要
+このリポジトリは、株式会社アールティ様が販売されているcrane_x7を制御しじゃんけんをするパッケージです。
 
-## ソースファイル
-- color_detection.cpp
-  - 選択した色の座標を計算
-- pick_and_move_tf.cpp
-  - 色の座標を元にロボットを操作
-- color_selector.cpp
-  - 手のポーズを元に色を選択
-- hand_pose_detection.py
-  - 手のポーズを読み取り
+保存した手の形を認識し、それを元にロボットが出す手を表現した赤青黄色のブロックを持ち上げます。
 
-## このパッケージを使う前に
-### ROS2及びCRANE-X7セットアップ
-- ROS2インストール
-  上田先生の[動画](https://www.youtube.com/watch?v=mBhtD08f5KY)及び[インストールスクリプト](https://github.com/ryuichiueda/ros2_setup_scripts)を参照し、インストールを行ってください。
-  
-- CRANE-X7及び関連パッケージのインストール
-  [RT社リポジトリ](https://github.com/rt-net/crane_x7_ros/tree/ros2)よりインストールできます。[RT社のブログ](https://rt-net.jp/humanoid/archives/4653)でも解説されています。いかにインストールコマンドを載せます。
-  ```
-  # Setup ROS environment
-  source /opt/ros/humble/setup.bash
-  
-  # Download crane_x7 repositories
-  mkdir -p ~/ros2_ws/src
-  cd ~/ros2_ws/src
-  git clone -b ros2 https://github.com/rt-net/crane_x7_ros.git
-  git clone -b ros2 https://github.com/rt-net/crane_x7_description.git
-  
-  # Install dependencies
-  rosdep install -r -y -i --from-paths .
+このパッケージはRealSenseD435の使用を前提としています。
+また、手の検出をする際に Google LLC様の[MediaPipe](https://github.com/google/mediapipe)を使用しています。
 
-  # Build & Install
-  cd ~/ros2_ws
-  colcon build --symlink-install
-  source ~/ros2_ws/install/setup.bash
-  ```
-  ([RT社リポジトリREADME.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より転載)
+## セットアップ方法
+### ROS2セットアップ
+上田先生の[動画](https://www.youtube.com/watch?v=mBhtD08f5KY)及び[インストールスクリプト](https://github.com/ryuichiueda/ros2_setup_scripts)を参照し、インストールを行ってください。以下にインストールコマンド例を載せます。
+```
+# Download setup_scripts
+$ mkdir ~/git/
+$ cd ~/git/
+$ git clone https://github.com/ryuichiueda/ros2_setup_scripts.git
+```
+```
+# Install ROS2
+$ ./setup.bash
+### don't add sudo to the head ###
+$ source ~/.bashrc
+$ ros2
+### usage appears if ok ###
+```
+([ros2_setup_scripts README.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より引用)
   
-  また, インストールが完了したらパッケージに含まれるサンプルコードをシミュレータ（Gazebo）で試すことができます。詳しくは[こちら](https://github.com/rt-net/crane_x7_ros/tree/ros2/crane_x7_examples)を参照してください。
   
-- USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
-  ```
-  # 一時的な付与の場合(上手くいかない時はUSBポートの名前を確認してください)
-  sudo chmod 666 /dev/ttyUSB0
-  
-  # 永続的な付与の場合(再起動を伴います)
-  sudo usermod -aG dialout $USER
-  reboot
-  ```
+### CRANE-X7及び関連パッケージのインストール
+[RT社リポジトリ](https://github.com/rt-net/crane_x7_ros/tree/ros2)よりインストールできます。[RT社のブログ](https://rt-net.jp/humanoid/archives/4653)でも解説されています。いかにインストールコマンドを載せます。
+```
+# Setup ROS environment
+source /opt/ros/humble/setup.bash
+
+# Download crane_x7 repositories
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+git clone -b ros2 https://github.com/rt-net/crane_x7_ros.git
+git clone -b ros2 https://github.com/rt-net/crane_x7_description.git
+
+# Install dependencies
+rosdep install -r -y -i --from-paths .
+
+# Build & Install
+cd ~/ros2_ws
+colcon build --symlink-install
+source ~/ros2_ws/install/setup.bash
+```
+([RT社リポジトリ README.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より引用)
+
+### USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
+```
+# 一時的な付与の場合(上手くいかない時はUSBポートの名前を確認してください)
+sudo chmod 666 /dev/ttyUSB0
+
+# 永続的な付与の場合(再起動を伴います)
+sudo usermod -aG dialout $USER
+reboot
+```
 
 ### RealSenseセットアップ
 [IntelRealsenseのgithub](https://github.com/IntelRealSense/librealsense/blob/development/doc/distribution_linux.md#installing-the-packages)を参照してください。以下先ほどのページより引用。
@@ -81,14 +84,19 @@ sudo apt-get install librealsense2-utils
 # セットアップできているか確認（ビューワーの起動）:  
 realsense-viewer
 ```
-# このパッケージの使い方
-## インストール
+
+### MediaPipe OpenCV のインストール
 ```
+pip install opencv-python mediapipe
+```
+
+### 本パッケージのインストール
+```
+# ダウンロード
 cd  ~/ros2_ws/src
 https://github.com/uchiyamashouki/sazaesann.git
-```
-## ビルド
-```
+
+# ビルド
 cd ~/ros2_ws
 colcon build
 source ~/ros2_ws/install/setup.bash
@@ -100,25 +108,43 @@ echo 'source ~/ros2_ws/install/setup.bash' >> ~/.bachrc
 source ~/.bashrc
 ```
 
-## 実行
-```
-#RealSense D435を搭載したcrane-x7のmove_groupと controllerの起動
-$ ros2 launch crane_x7_examples demo.launch.py port_name:=/dev/ttyUSB0 use_d435:=true
+## 使用方法
+- プログラムの起動
+  ```
+  # RealSense D435を搭載したcrane-x7の move_group と controller の起動
+  ros2 launch crane_x7_examples demo.launch.py port_name:=/dev/ttyUSB0 use_d435:=true
 
-# 本パッケージの実行
-$ ros2 launch sazaesann sazaesann.launch.py 
-```
-- 実行したらカメラの前でじゃんけんの手をそれぞれ出し、キーボード操作G,T,P,でその手を保存する。
+  # 本パッケージの起動
+  ros2 launch sazaesann sazaesann.launch.py 
+  ```
+- 赤、青、黄、のブロックを1つずつ用意し、ロボットの前に置く
+  - 赤は「グー」、青は「パー」、黄色は「チョキ」、に対応している。
+  - 色は [color_detection.cpp](./src/color_detection.cpp) の ```image_callback``` 関数内で指定されている
+
+- 実行したらカメラの前でじゃんけんの手をそれぞれ出し、キーボード操作G,T,P,でそれぞれ手を保存する。
 キーボードと手は下記の様に対応する。
-    - 「グー」はG,
-    - 「チョキ」はT,
-    - 「パー」P,
+  - 「グー」はG,
+  - 「チョキ」はT,
+  - 「パー」P,
 
 - じゃんけんの手を3秒出し続けるとその手を確定し、その手を元にロボットが動き出す。
 - 手が確定してから5秒後に再度手を認識するようになる。
+- プログラムを終了するには ```Ctrl + C``` を入力。
+
+## ソースファイル
+- hand_pose_detection.py
+  - 手のポーズの読み取り
+- color_selector.cpp
+  - 読み取った手を元に色を選択
+- color_detection.cpp
+  - 選択した色の座標を計算
+- pick_and_move_tf.cpp
+  - 色の座標を元にロボットを操作
 
 ## 動作確認済み環境
-Ubuntu 22.04
+- Ubuntu 22.04
+- ROS2 humble
+- Python 3.10
 
 ## ライセンス
 - © 2024 cit_sazae24
