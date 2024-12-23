@@ -77,7 +77,7 @@ public:
     constraints.joint_constraints.push_back(joint_constraint);
 
     move_group_arm_->setPathConstraints(constraints);
-
+	
     // 関節への負荷が低い 手の 撮影姿勢
     hand_detec_pose();
 
@@ -99,7 +99,11 @@ private:
   void color_callback(const std_msgs::msg::String::SharedPtr /*msg*/)
   {
     RCLCPP_INFO(this->get_logger(), "Color selected, starting timer");
-    init_pose();	//ブロックの撮影姿勢
+    //ブロックの撮影姿勢
+    // 関節への負荷が低い 手の 撮影姿勢
+    //init_pose();
+    // 関節への負荷が高い 真上から見下ろす撮影姿勢
+    control_arm(0.15, 0.0, 0.3, -180, 0, 90);
     timer_->reset();  // timerを再開
   }
 
@@ -175,40 +179,58 @@ private:
     move_group_arm_->setJointValueTarget(joint_values);
     move_group_arm_->move();
   }
+  
+  
+  void aori(int seata)	//見せびらかす姿勢
+  {
+    std::vector<double> joint_values;
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(90));
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(-160));
+    joint_values.push_back(angles::from_degrees(0.0));
+    joint_values.push_back(angles::from_degrees(-15));
+    joint_values.push_back(angles::from_degrees(90 - seata));
+    move_group_arm_->setJointValueTarget(joint_values);
+    move_group_arm_->move();
+  }
+  
 
   void picking(tf2::Vector3 target_position)
   {
     const double GRIPPER_DEFAULT = 0.0;
-    const double GRIPPER_OPEN = angles::from_degrees(60.0);
-    const double GRIPPER_CLOSE = angles::from_degrees(24.0);
+    const double GRIPPER_OPEN = angles::from_degrees(30.0);
+    const double GRIPPER_CLOSE = angles::from_degrees(15.0);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);
 
     // 掴む準備をする
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+    control_arm(target_position.x() + 0.05, target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 掴みに行く
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.02, -180, 0, 90);
+    control_arm(target_position.x() + 0.05, target_position.y(), target_position.z() + 0.05, -180, 0, 90);
 
     // ハンドを閉じる
     control_gripper(GRIPPER_CLOSE);
 
     // 持ち上げる
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
+    control_arm(target_position.x() + 0.05, target_position.y(), target_position.z() + 0.12, -180, 0, 90);
 
     // 一度初期姿勢に戻る
     //init_pose();
 
     // 見せびらかす
-    control_arm(0.3, 0, 0.4, 90, 0, 90);
-    control_arm(0.3, 0, 0.4, 110, 0, 90);
-    control_arm(0.3, 0, 0.4, -70, 0, 90);
-    control_arm(0.3, 0, 0.4, 90, 0, 90);
+    aori(0);
+    aori(40);
+    aori(-40);
+    aori(40);
+    aori(0);
+    
     
     //元の位置に戻す
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.12, -180, 0, 90);
-    control_arm(target_position.x(), target_position.y(), target_position.z() + 0.03, -180, 0, 90);
+    control_arm(target_position.x() + 0.05, target_position.y() , target_position.z() + 0.12, -180, 0, 90);
+    control_arm(target_position.x() + 0.05, target_position.y(), target_position.z() + 0.1, -180, 0, 90);
 
     // ハンドを開く
     control_gripper(GRIPPER_OPEN);

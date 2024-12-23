@@ -85,12 +85,12 @@ private:
  	 	
     if (camera_info_ && depth_image_) {
       if (target_color_ == "target_blue")
-        process_color(msg, 100, 125, 100, 255, 30, 255);
+        process_color(msg, 100, 140, 100, 255, 30, 255);
       if (target_color_ == "target_red")
         //process_color(msg, 150, 190, 70, 255, 30, 255);
-        process_color(msg, 0, 20, 70, 255, 30, 255);
+        process_color(msg, 0, 20, 100, 255, 30, 255);
       if (target_color_ == "target_yellow")
-        process_color(msg, 30, 80, 100, 255, 30, 255);
+        process_color(msg, 30, 50, 100, 255, 30, 255);
     }
   }
 

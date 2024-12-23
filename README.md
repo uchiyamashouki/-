@@ -145,6 +145,7 @@ source ~/.bashrc
 - Ubuntu 22.04
 - ROS2 humble
 - Python 3.10
+- opencv 4.5.4
 
 ## ライセンス
 - © 2024 cit_sazae24
