@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="2.0" ?>
 <sdf version="1.6">
   <world name="default">
     <physics name="1ms" type="ignored">
@@ -17,6 +17,40 @@
       filename="ignition-gazebo-scene-broadcaster-system"
       name="ignition::gazebo::systems::SceneBroadcaster">
     </plugin>
+
+    <model name="realsense_camera">
+      <pose>0.20 0 1.2 0 0 0</pose>
+      <link name="camera_link">
+        <sensor name="realsense_camera_sensor" type="camera">
+          <pose>0 0 0 0 0 0</pose> 
+          <plugin name="camera" filename="librealsense_gazebo_plugin.so">
+            <prefix>camera</prefix>
+	    <depthUpdateRate>10.0</depthUpdateRate>
+	    <colorUpdateRate>10.0</colorUpdateRate>
+            <infraredUpdateRate>1.0</infraredUpdateRate>
+            <depthTopicName>aligned_depth_to_color/image_raw</depthTopicName>
+            <depthCameraInfoTopicName>depth/camera_info</depthCameraInfoTopicName>
+            <colorTopicName>color/image_raw</colorTopicName>
+            <colorCameraInfoTopicName>color/camera_info</colorCameraInfoTopicName>
+            <infrared1TopicName>infra1/image_raw</infrared1TopicName>
+            <infrared1CameraInfoTopicName>infra1/camera_info</infrared1CameraInfoTopicName>
+            <infrared2TopicName>infra2/image_raw</infrared2TopicName>
+            <infrared2CameraInfoTopicName>infra2/camera_info</infrared2CameraInfoTopicName>
+            <colorOpticalframeName>camera_color_optical_frame</colorOpticalframeName>
+            <depthOpticalframeName>camera_depth_optical_frame</depthOpticalframeName>
+            <infrared1OpticalframeName>camera_left_ir_optical_frame</infrared1OpticalframeName>
+            <infrared2OpticalframeName>camera_right_ir_optical_frame</infrared2OpticalframeName>
+            <rangeMinDepth>0.2</rangeMinDepth>
+            <rangeMaxDepth>10.0</rangeMaxDepth>
+            <pointCloud>true</pointCloud>
+            <pointCloudTopicName>depth/color/points</pointCloudTopicName>
+            <pointCloudCutoff>0.25</pointCloudCutoff>
+            <pointCloudCutoffMax>9.0</pointCloudCutoffMax>
+         </plugin>
+        </sensor>
+      </link>
+    </model>
+
 
     <include>
       <uri>
