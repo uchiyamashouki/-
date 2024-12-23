@@ -50,7 +50,8 @@ cd ~/ros2_ws
 colcon build --symlink-install
 source ~/ros2_ws/install/setup.bash
 ```
-([RT社リポジトリ README.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より引用)
+([RT社リポジトリ README.md](https://github.com/rt-net/crane_x7_ros/blob/ros2/README.md#installation)より引用)(ROS2 ワークスペース名)```ros2_ws```の場合
+
 
 ### USBポートの設定（実機のCRANE-X7を動かす際に必要となります）
 ```
@@ -107,6 +108,7 @@ echo 'source ~/ros2_ws/install/setup.bash' >> ~/.bachrc
 # .bashrcに書いてあるとき下のコマンドが代わりにできます.
 source ~/.bashrc
 ```
+(ROS2 ワークスペース名)```ros2_ws```の場合
 
 ## 使用方法
 - プログラムの起動
