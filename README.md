@@ -150,3 +150,4 @@ source ~/.bashrc
 - © 2024 cit_sazae24
 - 本パッケージはApache License, Version 2.0に基づき公開されています。  
 ライセンスの全文は[LICENSE](./LICENSE)または[https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)から確認できます。
+- 本パッケージは、株式会社アールティ様が提供する[crane_x7_ros](https://github.com/rt-net/crane_x7_ros/tree/ros2)に基づいて作成しています。
